@@ -5,7 +5,7 @@ export const openDB = () => {
     if (db) {
       resolve(db);
     } else {
-      const request = indexedDB.open('offline-notes', 3);
+      const request = indexedDB.open('project-c', 1);
 
       request.onupgradeneeded = (event) => {
         db = event.target.result;

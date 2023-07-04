@@ -44,7 +44,7 @@ export async function submitNote(note: Note) {
   if (navigator.onLine) {
     // Send a POST request to the save-note endpoint
     try {
-      const response = await fetch('/api/save-note', {
+      const response = await fetch('/chronology/api/save-note', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -79,7 +79,7 @@ export async function deleteNote(noteId: string) {
           // Make a DELETE request to the API endpoint
           try {
             await deleteOfflineNote(noteId);
-            await axios.delete(`/api/delete-note?id=${note._id}`);
+            await axios.delete(`/chronology/api/delete-note?id=${note._id}`);
           } catch (error) {
             console.error('Error deleting note:', error);
           }
@@ -107,7 +107,7 @@ export async function editNote(noteId: string, updatedTitle: string) {
         if (navigator.onLine) {
           // Make a PUT request to the API endpoint
           try {
-            await axios.put(`/api/edit-note?id=${note._id}`, { title: updatedTitle });
+            await axios.put(`/chronology/api/edit-note?id=${note._id}`, { title: updatedTitle });
             note.title = updatedTitle;
             note.localEditSynced = undefined;
             await editOfflineNote(note);
@@ -147,7 +147,7 @@ export async function updateEditedNote(serverNote: Note, localNotes: Note[]) {
   const matchingLocalNote = localNotes.find((localNote: Note) => localNote._id === serverNote._id);
   if (matchingLocalNote !== undefined) {
     if (matchingLocalNote.localEditSynced === false) {
-      await axios.put(`/api/edit-note?id=${matchingLocalNote._id}`, { title: matchingLocalNote.title });
+      await axios.put(`/chronology/api/edit-note?id=${matchingLocalNote._id}`, { title: matchingLocalNote.title });
       matchingLocalNote.localEditSynced = undefined;
       await editOfflineNote(matchingLocalNote);
     } else if (matchingLocalNote.localEditSynced === undefined) {
@@ -168,7 +168,7 @@ export async function refreshNotes() {
   if (navigator.onLine) {
     try {
       const localNotes = await getOfflineNotes();
-      const response = await axios.get('/api/notes');
+      const response = await axios.get('/chronology/api/fetch-notes');
       const serverNotes = response.data;
 
       for (const localNote of localNotes) {
@@ -176,10 +176,10 @@ export async function refreshNotes() {
           const matchingServerNote = serverNotes.find((serverNote: Note) => localNote._id === serverNote._id);
           if (matchingServerNote !== undefined) {
             await deleteOfflineNote(localNote.localId);
-            await axios.delete(`/api/delete-note?id=${localNote._id}`);
+            await axios.delete(`/chronology/api/delete-note?id=${localNote._id}`);
           }
         } else if (localNote._id === undefined) {
-          const submittedNoteResponse = await fetch('/api/save-note', {
+          const submittedNoteResponse = await fetch('/chronology/api/save-note', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -194,7 +194,7 @@ export async function refreshNotes() {
       }
   
       const updatedLocalNotes = await getOfflineNotes();
-      const updatedResponse = await axios.get('/api/notes');
+      const updatedResponse = await axios.get('/chronology/api/fetch-notes');
       const updatedServerNotes = updatedResponse.data;
 
       for (const serverNote of updatedServerNotes) {

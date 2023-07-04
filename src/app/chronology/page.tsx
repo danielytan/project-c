@@ -1,5 +1,9 @@
-import Link from 'next/link'
- 
-export default function Page() {
-  return <p>WIP</p>
+import NoteList from './components/note-list';
+
+export default function ChronologyPage() {
+  return (
+    <div>
+      <NoteList />
+    </div>
+  );
 }

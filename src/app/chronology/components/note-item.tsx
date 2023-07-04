@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
+import styled, { StyleSheetManager } from 'styled-components';
 import SyncIndicator from './sync-indicator'
+import isPropValid from '@emotion/is-prop-valid';
 import { Note } from '../lib/note-actions'
 import { Button } from '@/components/ui/button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -196,55 +197,57 @@ const NoteItem: React.FC<NoteItemProps> = ({ note, onDeleteNote, onEditNote }) =
   }, [isEditing, title]);
 
   return (
-    <NoteItemWrapper>
-      <NoteFrame isSubmitted={note._id !== undefined}>
-        {isSyncing && <SyncIndicator/>}
-        <DeleteButton onClick={handleDelete}>[x]</DeleteButton>
-        <p className="note-timestamp">{new Date(note.createdAt).toUTCString()}</p>
-        <div className="note-content">
-          {isEditing ? (
-            <textarea
-              ref={textareaRef}
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              autoFocus
-            />
-          ) : (
-            <Content>{note.title}</Content>
-          )}
-        </div>
-        {isEditing ? (
-          <div className="edit-buttons">
-            <SaveButton onClick={handleSave}>Save</SaveButton>
-            <CancelButton onClick={handleCancel}>Cancel</CancelButton>
+    <StyleSheetManager shouldForwardProp={isPropValid}>
+      <NoteItemWrapper>
+        <NoteFrame isSubmitted={note._id !== undefined}>
+          {isSyncing && <SyncIndicator/>}
+          <DeleteButton onClick={handleDelete}>[x]</DeleteButton>
+          <p className="note-timestamp">{new Date(note.createdAt).toUTCString()}</p>
+          <div className="note-content">
+            {isEditing ? (
+              <textarea
+                ref={textareaRef}
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                autoFocus
+              />
+            ) : (
+              <Content>{note.title}</Content>
+            )}
           </div>
-        ) : (
-          <EditButton onClick={handleEdit}>Edit</EditButton>
+          {isEditing ? (
+            <div className="edit-buttons">
+              <SaveButton onClick={handleSave}>Save</SaveButton>
+              <CancelButton onClick={handleCancel}>Cancel</CancelButton>
+            </div>
+          ) : (
+            <EditButton onClick={handleEdit}>Edit</EditButton>
+          )}
+        </NoteFrame>
+        {(note.localDeleteSynced === false || note.localEditSynced === false || note._id === undefined) && (
+          <OfflineIndicatorWrapper>
+            {note.localDeleteSynced === false && (
+              <OfflineIndicator>
+                <OfflineIndicatorIcon icon={faExclamationCircle} />
+                <OfflineIndicatorText>Note deletion not synced</OfflineIndicatorText>
+              </OfflineIndicator>
+            )}
+            {note.localEditSynced === false && (
+              <OfflineIndicator>
+                <OfflineIndicatorIcon icon={faExclamationCircle} />
+                <OfflineIndicatorText>Note edit not synced</OfflineIndicatorText>
+              </OfflineIndicator>
+            )}
+            {note._id === undefined && (
+              <OfflineIndicator>
+                <OfflineIndicatorIcon icon={faExclamationCircle} />
+                <OfflineIndicatorText>Note submission not synced</OfflineIndicatorText>
+              </OfflineIndicator>
+            )}
+          </OfflineIndicatorWrapper>
         )}
-      </NoteFrame>
-      {(note.localDeleteSynced === false || note.localEditSynced === false || note._id === undefined) && (
-        <OfflineIndicatorWrapper>
-          {note.localDeleteSynced === false && (
-            <OfflineIndicator>
-              <OfflineIndicatorIcon icon={faExclamationCircle} />
-              <OfflineIndicatorText>Note deletion not synced</OfflineIndicatorText>
-            </OfflineIndicator>
-          )}
-          {note.localEditSynced === false && (
-            <OfflineIndicator>
-              <OfflineIndicatorIcon icon={faExclamationCircle} />
-              <OfflineIndicatorText>Note edit not synced</OfflineIndicatorText>
-            </OfflineIndicator>
-          )}
-          {note._id === undefined && (
-            <OfflineIndicator>
-              <OfflineIndicatorIcon icon={faExclamationCircle} />
-              <OfflineIndicatorText>Note submission not synced</OfflineIndicatorText>
-            </OfflineIndicator>
-          )}
-        </OfflineIndicatorWrapper>
-      )}
-    </NoteItemWrapper>
+      </NoteItemWrapper>
+    </StyleSheetManager>
   );
 };
 

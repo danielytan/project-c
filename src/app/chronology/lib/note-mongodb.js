@@ -1,7 +1,7 @@
 import { MongoClient } from 'mongodb';
 
 const uri = process.env.MONGODB_URI;
-const dbName = 'offline-notes-db';
+const dbName = 'project-c';
 
 let client = null;
 
