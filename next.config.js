@@ -1,6 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: false
-}
+  reactStrictMode: false,
+  swcMinify: true,
+  compiler: {
+    styledComponents: true,
+    //removeConsole: process.env.NODE_ENV !== 'development',
+  },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

@@ -7,7 +7,7 @@ const AdminConsoleWrapper: React.FC = () => {
   const isAppendedRef = useRef(false);
 
   useEffect(() => {
-    import('@/components/admin-console').then(({ default: AdminConsole }) => {
+    import('@/app/console/components/admin-console').then(({ default: AdminConsole }) => {
       const adminConsole = new AdminConsole();
       if (adminConsoleRef.current && !isAppendedRef.current) {
         adminConsoleRef.current.appendChild(adminConsole);
