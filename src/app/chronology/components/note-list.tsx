@@ -15,33 +15,29 @@ import NoteItem from './note-item';
 import OfflineIndicator from './offline-indicator';
 
 const Container = styled.div`
-  max-width: 800px;
-  margin: 0 auto;
+  max-width: 750px;
+  margin: 0 1;
   padding: 20px;
-`;
-
-const Heading = styled.h1`
-  font-size: 24px;
-  margin-bottom: 20px;
 `;
 
 const NotesContainer = styled(Container)`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: left;
 `;
 
 const NoteListWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: left;
   width: 90%; /* Adjust the width to a percentage value */
-  margin: auto; /* Add margin: auto to center the wrapper */
+  margin: 0 0; /* Add margin: auto to center the wrapper */
 `;
 
 const NoteListLoadingSpinner = styled(SpinnerContainer)`
-  margin-top: 20px;
-  margin-bottom: 10px;
+  margin-top: 0px;
+  margin-bottom: 20px;
+  align-self: center;
 `;
 
 export default function NoteList() {
@@ -136,7 +132,6 @@ export default function NoteList() {
 
   return (
     <NotesContainer>
-      <Heading>Notes</Heading>
       <NoteListWrapper>
         <NoteForm onNoteSubmit={handleNoteSubmit} />
         {loading && <NoteListLoadingSpinner />}

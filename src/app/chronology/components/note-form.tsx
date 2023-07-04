@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 const NoteFormContainer = styled.form`
   display: flex;
   align-items: stretch;
-  align-self: center; /* Center the form horizontally */
+  align-self: left; /* Center the form horizontally */
+  margin-bottom: 20px;
 `;
 
 const NoteInput = styled.textarea`
@@ -59,7 +60,7 @@ const NoteForm: React.FC<NoteFormProps> = ({ onNoteSubmit }) => {
         placeholder="Enter your note..."
       />
       <AddNoteButton type="submit">
-        {isSyncing ? <LoadingSpinner/> : "Add Note" }
+        {isSyncing ? <LoadingSpinner/> : "Submit" }
       </AddNoteButton>
     </NoteFormContainer>
   );

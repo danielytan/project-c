@@ -23,7 +23,7 @@ const NoteFrame = styled.li<{ isSubmitted?: boolean }>`
   margin-bottom: 0.25rem;
   max-height: 150px;
   overflow-y: auto;
-  width: 500px;
+  width: 100%;
   word-wrap: break-word;
   overflow: visible;
   background-color: ${props => (!props.isSubmitted ? '#eee' : 'transparent')};
