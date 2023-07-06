@@ -50,6 +50,7 @@ export async function submitNote(note: Note) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(createServerNote(note)),
+        cache: 'no-store'
       });
 
       if (response.ok) {
@@ -185,6 +186,7 @@ export async function refreshNotes() {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify(createServerNote(localNote)),
+            cache: 'no-store'
           });
           await submittedNoteResponse.json().then(async (data) => {
             localNote._id = data.insertedId;
@@ -194,8 +196,8 @@ export async function refreshNotes() {
       }
   
       const updatedLocalNotes = await getOfflineNotes();
-      const updatedResponse = await axios.get('/chronology/api/fetch-notes');
-      const updatedServerNotes = updatedResponse.data;
+      const updatedResponse = await fetch('/chronology/api/fetch-notes', { cache: 'no-store' });
+      const updatedServerNotes = await updatedResponse.json();
 
       for (const serverNote of updatedServerNotes) {
         updateSavedNote(serverNote, updatedLocalNotes); // make sure to keep into account locally deleted notes
