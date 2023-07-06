@@ -228,20 +228,17 @@ const NoteItem: React.FC<NoteItemProps> = ({ note, onDeleteNote, onEditNote }) =
           <OfflineIndicatorWrapper>
             {note.localDeleteSynced === false && (
               <OfflineIndicator>
-                <OfflineIndicatorIcon icon={faExclamationCircle} />
-                <OfflineIndicatorText>Note deletion not synced</OfflineIndicatorText>
+                <OfflineIndicatorText>❗ Note deletion not synced</OfflineIndicatorText>
               </OfflineIndicator>
             )}
             {note.localEditSynced === false && (
               <OfflineIndicator>
-                <OfflineIndicatorIcon icon={faExclamationCircle} />
-                <OfflineIndicatorText>Note edit not synced</OfflineIndicatorText>
+                <OfflineIndicatorText>❗ Note edit not synced</OfflineIndicatorText>
               </OfflineIndicator>
             )}
             {note._id === undefined && (
               <OfflineIndicator>
-                <OfflineIndicatorIcon icon={faExclamationCircle} />
-                <OfflineIndicatorText>Note submission not synced</OfflineIndicatorText>
+                <OfflineIndicatorText>❗ Note submission not synced</OfflineIndicatorText>
               </OfflineIndicator>
             )}
           </OfflineIndicatorWrapper>
