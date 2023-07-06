@@ -168,8 +168,8 @@ export async function refreshNotes() {
   if (navigator.onLine) {
     try {
       const localNotes = await getOfflineNotes();
-      const response = await axios.get('/chronology/api/fetch-notes');
-      const serverNotes = response.data;
+      const response = await fetch('/chronology/api/fetch-notes', { cache: 'no-store' });
+      const serverNotes = await response.json();
 
       for (const localNote of localNotes) {
         if (localNote.localDeleteSynced === false) {
