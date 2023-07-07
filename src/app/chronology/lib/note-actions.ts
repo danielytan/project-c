@@ -173,20 +173,23 @@ export async function refreshNotes() {
       const serverNotes = await response.json();
 
       for (const localNote of localNotes) {
-        if (localNote.localDeleteSynced === false) {
+        if (localNote._id !== undefined) {
           const matchingServerNote = serverNotes.find((serverNote: Note) => localNote._id === serverNote._id);
           if (matchingServerNote !== undefined) {
+            if (localNote.localDeleteSynced === false) {
+              await deleteOfflineNote(localNote.localId);
+              await axios.delete(`/chronology/api/delete-note?id=${localNote._id}`);
+            }
+          } else {
             await deleteOfflineNote(localNote.localId);
-            await axios.delete(`/chronology/api/delete-note?id=${localNote._id}`);
           }
-        } else if (localNote._id === undefined) {
+        } else {
           const submittedNoteResponse = await fetch('/chronology/api/save-note', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify(createServerNote(localNote)),
-            cache: 'no-store'
           });
           await submittedNoteResponse.json().then(async (data) => {
             localNote._id = data.insertedId;

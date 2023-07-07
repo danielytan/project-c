@@ -109,7 +109,7 @@ export const getOfflineNotes = async () => {
   const db = await openDB();
 
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction('local-notes', 'readwrite');
+    const transaction = db.transaction('local-notes', 'readonly');
     const store = transaction.objectStore('local-notes');
 
     const request = store.getAll();
