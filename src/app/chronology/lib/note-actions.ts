@@ -171,6 +171,7 @@ export async function refreshNotes() {
       const localNotes = await getOfflineNotes();
       const response = await fetch('/chronology/api/fetch-notes', { cache: 'no-store' });
       const serverNotes = await response.json();
+      console.log(serverNotes)
 
       for (const localNote of localNotes) {
         if (localNote._id !== undefined) {
