@@ -54,6 +54,26 @@ const Grid = styled.div`
     padding: 0.5rem;
   }
 `
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+`;
+
+const EventForm = styled.form`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 1rem;
+  background-color: #fff;
+  z-index: 1000;
+`;
+
 const TimeGrid: React.FC = () => {
   const getTimeSlots = (): Date[] => {
     const startTime = new Date();
@@ -69,7 +89,6 @@ const TimeGrid: React.FC = () => {
   };
 
   const timeSlots = getTimeSlots();
-  const columns = ['発信元', '内容'];
 
   const [isAddingEvent, setIsAddingEvent] = useState(false);
   const [eventTime, setEventTime] = useState('');
@@ -99,6 +118,36 @@ const TimeGrid: React.FC = () => {
 
   return (
     <Grid>
+      <div>
+        <input type="text" placeholder="Search" />
+        <button onClick={handleAddEvent}>Add Event</button>
+        {isAddingEvent && (
+          <>
+            <Overlay />
+            <EventForm onSubmit={handleEventSubmit}>
+              <input
+                type="text"
+                placeholder="Time"
+                value={eventTime}
+                onChange={(e) => setEventTime(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Location"
+                value={eventLocation}
+                onChange={(e) => setEventLocation(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Details"
+                value={eventDetails}
+                onChange={(e) => setEventDetails(e.target.value)}
+              />
+              <button type="submit">Add</button>
+            </EventForm>
+          </>
+        )}
+      </div>
       <div className="timeGrid">
         <div className="timeHeader">
           <span className="timesHeader">時刻</span>
@@ -116,31 +165,6 @@ const TimeGrid: React.FC = () => {
           </React.Fragment>
         ))}
       </div>
-      {isAddingEvent ? (
-        <form className="addEventForm" onSubmit={handleEventSubmit}>
-          <input
-            type="text"
-            placeholder="Time"
-            value={eventTime}
-            onChange={(e) => setEventTime(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Location"
-            value={eventLocation}
-            onChange={(e) => setEventLocation(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Details"
-            value={eventDetails}
-            onChange={(e) => setEventDetails(e.target.value)}
-          />
-          <button type="submit">Add</button>
-        </form>
-      ) : (
-        <button onClick={handleAddEvent}>Add Event</button>
-      )}
     </Grid>
   );
 };
