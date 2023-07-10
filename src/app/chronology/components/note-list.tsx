@@ -13,9 +13,10 @@ import styled from 'styled-components';
 import NoteForm from './note-form';
 import NoteItem from './note-item';
 import OfflineIndicator from './offline-indicator';
+import TimeGrid from './time-grid';
 
 const Container = styled.div`
-  max-width: 750px;
+  max-width: 100%;
   margin: 0 1;
   padding: 20px;
 `;
@@ -132,15 +133,7 @@ export default function NoteList() {
 
   return (
     <NotesContainer>
-      <NoteListWrapper>
-        <NoteForm onNoteSubmit={handleNoteSubmit} />
-        {loading && <NoteListLoadingSpinner />}
-        <ul>
-          {allNotes.map((note, index) => (
-            <NoteItem key={index} note={note} onDeleteNote={handleNoteDelete} onEditNote={handleEditNote} />
-          ))}
-        </ul>
-      </NoteListWrapper>
+      <TimeGrid />
       <OfflineIndicator />
     </NotesContainer>
   );

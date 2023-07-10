@@ -28,7 +28,7 @@
     "lit": "^2.7.5",
     "lucide-react": "^0.257.0",
     "mongodb": "^5.6.0",
-    "next": "13.4.7",
+    "next": "^13.4.9",
     "next-themes": "^0.2.1",
     "postcss": "8.4.24",
     "pusher": "^5.1.3",
