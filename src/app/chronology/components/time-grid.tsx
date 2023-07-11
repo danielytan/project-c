@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { DateTimePicker } from "@/components/date-time-picker"
 import styled from 'styled-components';
 
 import {
@@ -69,15 +70,6 @@ const Grid = styled.div`
     padding: 0.5rem;
   }
 `
-const Overlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-`;
 
 const EventForm = styled.form`
   position: fixed;
@@ -86,13 +78,14 @@ const EventForm = styled.form`
   transform: translate(-50%, -50%);
   padding: 1rem;
   background-color: #fff;
-  z-index: 1000;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 20%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
   input {
+    margin-top: 1rem;
     margin-bottom: 1rem; /* Add margin between the input elements */
     padding: 0.5rem; /* Optional: Add padding to the input elements */
   }
@@ -139,7 +132,7 @@ const TimeGrid: React.FC = () => {
   const timeSlots = getTimeSlots();
 
   const [isAddingEvent, setIsAddingEvent] = useState(false);
-  const [eventTime, setEventTime] = useState('');
+  const [eventTime, setEventTime] = useState(new Date());
   const [eventLocation, setEventLocation] = useState('');
   const [eventDetails, setEventDetails] = useState('');
 
@@ -162,7 +155,7 @@ const TimeGrid: React.FC = () => {
 
     // Logic to save the new event or update the existing events list
 
-    setEventTime('');
+    setEventTime(new Date());
     setEventLocation('');
     setEventDetails('');
     setIsAddingEvent(false);
@@ -179,14 +172,10 @@ const TimeGrid: React.FC = () => {
         </Container>
         {isAddingEvent && (
           <>
-            <Overlay />
             <EventForm onSubmit={handleEventSubmit}>
-              <Input
-                type="text"
-                placeholder="時刻"
-                value={eventTime}
-                onChange={(e) => setEventTime(e.target.value)}
-              />
+              <DateTimePicker date={new Date()} setDate={function (date: Date): void {
+                setEventTime(date);
+              }} />
               <Input
                 type="text"
                 placeholder="発信元"
