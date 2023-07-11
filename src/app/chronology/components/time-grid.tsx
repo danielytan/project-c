@@ -1,5 +1,19 @@
 import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from "@/components/ui/input"
 import styled from 'styled-components';
+
+import {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from "@/components/ui/command"
 
 const Grid = styled.div`
   .timeGrid {
@@ -72,6 +86,39 @@ const EventForm = styled.form`
   padding: 1rem;
   background-color: #fff;
   z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 20%;
+
+  input {
+    margin-bottom: 1rem; /* Add margin between the input elements */
+    padding: 0.5rem; /* Optional: Add padding to the input elements */
+  }
+
+  .buttonContainer {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .buttonContainer button {
+    flex: 1;
+    margin: 0 0.25rem;
+    padding: 0.5rem 1rem; /* Adjust the padding to change the button size */
+    font-size: 1rem; /* Adjust the font size to change the button size */
+  }
+
+  .customInput {
+    /* Custom styles for the "内容" input */
+    height: 200px; /* Adjust the height to increase the size of the input */
+`;
+
+const Container = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
 `;
 
 const TimeGrid: React.FC = () => {
@@ -99,6 +146,10 @@ const TimeGrid: React.FC = () => {
     setIsAddingEvent(true);
   };
 
+  const handleCancelEvent = () => {
+    setIsAddingEvent(false);
+  };
+
   const handleEventSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -119,31 +170,41 @@ const TimeGrid: React.FC = () => {
   return (
     <Grid>
       <div>
-        <input type="text" placeholder="Search" />
-        <button onClick={handleAddEvent}>Add Event</button>
+        <Container>
+          <Button onClick={handleAddEvent}>イベントを追加</Button>
+          <Command className="md:w-[25px] lg:w-[300px] rounded-lg border">
+            <CommandInput placeholder="Elasticsearch (WIP)" />
+          </Command>
+        </Container>
         {isAddingEvent && (
           <>
             <Overlay />
             <EventForm onSubmit={handleEventSubmit}>
-              <input
+              <Input
                 type="text"
-                placeholder="Time"
+                placeholder="時刻"
                 value={eventTime}
                 onChange={(e) => setEventTime(e.target.value)}
               />
-              <input
+              <Input
                 type="text"
-                placeholder="Location"
+                placeholder="発信元"
                 value={eventLocation}
                 onChange={(e) => setEventLocation(e.target.value)}
               />
-              <input
+              <Input
                 type="text"
-                placeholder="Details"
+                placeholder="内容"
                 value={eventDetails}
                 onChange={(e) => setEventDetails(e.target.value)}
+                className="customInput" // Add a custom class to target the "内容" input
               />
-              <button type="submit">Add</button>
+            <div className="buttonContainer">
+              <Button type="button" onClick={handleCancelEvent}>
+                キャンセル
+              </Button>
+              <Button type="submit">保存</Button>
+            </div>
             </EventForm>
           </>
         )}
@@ -158,7 +219,12 @@ const TimeGrid: React.FC = () => {
         {timeSlots.map((timeSlot) => (
           <React.Fragment key={timeSlot.toISOString()}>
             <div className="timeSlot">
-              {timeSlot.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
+              {timeSlot.toLocaleString('en-Gb', {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: false,
+                timeZone: "Japan"
+              })}
             </div>
             <div className="columnSlot" />
             <div className="columnSlot" />
