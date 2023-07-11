@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from "@/components/ui/input"
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import styled from 'styled-components';
 
 import {
@@ -112,7 +113,7 @@ const EventForm = styled.form`
 
   .customInput {
     /* Custom styles for the "内容" input */
-    height: 200px; /* Adjust the height to increase the size of the input */
+    height: 100px; /* Adjust the height to increase the size of the input */
 `;
 
 const Container = styled.div`
@@ -192,8 +193,7 @@ const TimeGrid: React.FC = () => {
                 value={eventLocation}
                 onChange={(e) => setEventLocation(e.target.value)}
               />
-              <Input
-                type="text"
+              <Textarea
                 placeholder="内容"
                 value={eventDetails}
                 onChange={(e) => setEventDetails(e.target.value)}
