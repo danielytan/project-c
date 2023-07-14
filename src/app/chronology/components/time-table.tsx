@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import UtilityBar from './utility-bar';
+import React from 'react';
 import styled from 'styled-components';
 
 const Grid = styled.div`
@@ -43,17 +42,6 @@ const Grid = styled.div`
   .columnSlot {
     border-right: 1px solid #ddd;
   }
-
-  .addEventForm {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 1rem;
-  }
-
-  .addEventForm input {
-    margin-bottom: 0.5rem;
-    padding: 0.5rem;
-  }
 `
 
 const TimeGrid: React.FC = () => {
@@ -74,7 +62,6 @@ const TimeGrid: React.FC = () => {
 
   return (
     <Grid>
-      <UtilityBar />
       <div className="timeGrid">
         <div className="timeHeader">
           <span className="timesHeader">時刻</span>

@@ -13,7 +13,6 @@ import styled from 'styled-components';
 import NoteForm from './note-form';
 import NoteItem from './note-item';
 import OfflineIndicator from './offline-indicator';
-import TimeGrid from './time-grid';
 
 const Container = styled.div`
   max-width: 100%;
@@ -133,7 +132,6 @@ export default function NoteList() {
 
   return (
     <NotesContainer>
-      <TimeGrid />
       <OfflineIndicator />
     </NotesContainer>
   );
