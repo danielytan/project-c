@@ -61,11 +61,7 @@ const Container = styled.div`
   margin-bottom: 1rem;
 `;
 
-interface UtilityBarProps {
-  onEventSubmit: (event: any) => Promise<void>;
-}
-
-const UtilityBar: React.FC<UtilityBarProps> = ({ onEventSubmit }) => {
+const UtilityBar: React.FC = () => {
   const [isAddingEvent, setIsAddingEvent] = useState(false);
   const [eventTime, setEventTime] = useState(new Date());
   const [eventLocation, setEventLocation] = useState('');
@@ -79,7 +75,7 @@ const UtilityBar: React.FC<UtilityBarProps> = ({ onEventSubmit }) => {
     setIsAddingEvent(false);
   };
 
-  const handleEventSubmit = async (e: React.FormEvent) => {
+  const handleEventSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     const newEvent = {
@@ -87,8 +83,6 @@ const UtilityBar: React.FC<UtilityBarProps> = ({ onEventSubmit }) => {
       location: eventLocation,
       details: eventDetails
     };
-
-    await onEventSubmit(newEvent);
 
     // Logic to save the new event or update the existing events list
 

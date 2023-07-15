@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useCallback } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import UtilityBar from './utility-bar';
 import TimeTable from './time-table';
@@ -16,15 +16,9 @@ const Container = styled.div`
 `
 
 const TimeScheduler: React.FC = () => {
-  const handleNoteSubmit = useCallback(async (noteTitle: string) => {
-    //const note: Note = createNote(noteTitle);
-    //await submitNote(note);
-    //setAllNotes(await getNotes());
-  }, []);
-
   return (
     <Container>
-      <UtilityBar onEventSubmit={handleNoteSubmit}/>
+      <UtilityBar />
       <TimeTable />
       <OfflineIndicator />
     </Container>
