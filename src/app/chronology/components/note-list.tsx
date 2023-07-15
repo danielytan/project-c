@@ -2,11 +2,11 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { SpinnerContainer } from './loading-spinner';
-import { pusherClient } from '../lib/note-pusher'
+import { pusherClient } from '../lib/event-pusher'
 import { Note,
   createNote, submitNote, deleteNote, editNote, refreshNotes, getNotes,
   updateSavedNote, updateEditedNote, updateDeletedNote
-} from '../lib/note-actions'
+} from '../lib/event-actions'
 
 import styled from 'styled-components';
 

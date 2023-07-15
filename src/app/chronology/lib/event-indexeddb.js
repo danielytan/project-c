@@ -1,3 +1,5 @@
+const OBJECT_STORE_NAME = 'local-notes';
+
 let db;
 
 export const openDB = () => {
@@ -11,10 +13,10 @@ export const openDB = () => {
         db = event.target.result;
         //db.createObjectStore('requests', { keyPath: 'id', autoIncrement: true });
         try {
-          db.deleteObjectStore('local-notes');
+          db.deleteObjectStore(OBJECT_STORE_NAME);
         } catch {
         }
-        db.createObjectStore('local-notes', { keyPath: 'localId' });
+        db.createObjectStore(OBJECT_STORE_NAME, { keyPath: 'localId' });
       };
 
       request.onsuccess = (event) => {
@@ -29,12 +31,12 @@ export const openDB = () => {
   });
 };
 
-export const storeOfflineNote = async (note) => {
+export const storeOfflineEvent = async (note) => {
   const db = await openDB();
 
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction('local-notes', 'readwrite');
-    const store = transaction.objectStore('local-notes');
+    const transaction = db.transaction(OBJECT_STORE_NAME, 'readwrite');
+    const store = transaction.objectStore(OBJECT_STORE_NAME);
 
     const request = store.add(note);
 
@@ -48,12 +50,12 @@ export const storeOfflineNote = async (note) => {
   });
 }
 
-export const deleteOfflineNote = async (localId) => {
+export const deleteOfflineEvent = async (localId) => {
   const db = await openDB();
 
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction('local-notes', 'readwrite');
-    const store = transaction.objectStore('local-notes');
+    const transaction = db.transaction(OBJECT_STORE_NAME, 'readwrite');
+    const store = transaction.objectStore(OBJECT_STORE_NAME);
 
     const request = store.delete(localId);
 
@@ -67,12 +69,12 @@ export const deleteOfflineNote = async (localId) => {
   });
 }
 
-export const editOfflineNote = async (updatedNote) => {
+export const editOfflineEvent = async (updatedNote) => {
   const db = await openDB();
 
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction('local-notes', 'readwrite');
-    const store = transaction.objectStore('local-notes');
+    const transaction = db.transaction(OBJECT_STORE_NAME, 'readwrite');
+    const store = transaction.objectStore(OBJECT_STORE_NAME);
 
     const request = store.put(updatedNote);
 
@@ -86,12 +88,12 @@ export const editOfflineNote = async (updatedNote) => {
   });
 }
 
-export const getOfflineNote = async (localId) => {
+export const getOfflineEvent = async (localId) => {
   const db = await openDB();
 
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction('local-notes', 'readonly');
-    const store = transaction.objectStore('local-notes');
+    const transaction = db.transaction(OBJECT_STORE_NAME, 'readonly');
+    const store = transaction.objectStore(OBJECT_STORE_NAME);
 
     const request = store.get(localId);
 
@@ -105,12 +107,12 @@ export const getOfflineNote = async (localId) => {
   });
 }
 
-export const getOfflineNotes = async () => {
+export const getOfflineEvents = async () => {
   const db = await openDB();
 
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction('local-notes', 'readonly');
-    const store = transaction.objectStore('local-notes');
+    const transaction = db.transaction(OBJECT_STORE_NAME, 'readonly');
+    const store = transaction.objectStore(OBJECT_STORE_NAME);
 
     const request = store.getAll();
 

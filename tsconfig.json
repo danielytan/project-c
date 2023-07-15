@@ -23,6 +23,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/chronology/lib/note-mongodb.js", "src/app/chronology/lib/note-mongodb.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/chronology/lib/event-mongodb.js", "src/app/chronology/lib/event-mongodb.js"],
   "exclude": ["node_modules"]
 }

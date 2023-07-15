@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled, { StyleSheetManager } from 'styled-components';
 import SyncIndicator from './sync-indicator'
 import isPropValid from '@emotion/is-prop-valid';
-import { Note } from '../lib/note-actions'
+import { Event } from '../lib/event-actions'
 import { Button } from '@/components/ui/button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
@@ -141,7 +141,7 @@ const OfflineIndicatorText = styled.span`
 `;
 
 interface NoteItemProps {
-  note: Note,
+  note: Event,
   onDeleteNote: (noteId: string) => Promise<void>;
   onEditNote: (noteId: string, updatedTitle: string) => Promise<void>;
 }
@@ -228,17 +228,17 @@ const NoteItem: React.FC<NoteItemProps> = ({ note, onDeleteNote, onEditNote }) =
           <OfflineIndicatorWrapper>
             {note.localDeleteSynced === false && (
               <OfflineIndicator>
-                <OfflineIndicatorText>❗ Note deletion not synced</OfflineIndicatorText>
+                <OfflineIndicatorText>❗ Event deletion not synced</OfflineIndicatorText>
               </OfflineIndicator>
             )}
             {note.localEditSynced === false && (
               <OfflineIndicator>
-                <OfflineIndicatorText>❗ Note edit not synced</OfflineIndicatorText>
+                <OfflineIndicatorText>❗ Event edit not synced</OfflineIndicatorText>
               </OfflineIndicator>
             )}
             {note._id === undefined && (
               <OfflineIndicator>
-                <OfflineIndicatorText>❗ Note submission not synced</OfflineIndicatorText>
+                <OfflineIndicatorText>❗ Event submission not synced</OfflineIndicatorText>
               </OfflineIndicator>
             )}
           </OfflineIndicatorWrapper>
