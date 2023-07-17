@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Button } from '@/components/ui/button';
 import { Note } from '../lib/note-actions';
 
 const Grid = styled.div`
@@ -49,12 +50,20 @@ const Grid = styled.div`
   }
 `;
 
+const DeleteButton = styled(Button)`
+  font-size: 1rem;
+`
+
 interface TimeTableProps {
   events: Note[];
+  isEditing: boolean;
+  onEventEdit: (noteId: string, updatedNoteProps: any) => Promise<void>;
+  onEventDelete: (noteId: string) => Promise<void>;
 }
 
-const TimeTable: React.FC<TimeTableProps> = ({ events }) => {
-  let currentMonth = 0;
+const TimeTable: React.FC<TimeTableProps> = ({
+  isEditing, events, onEventEdit, onEventDelete
+}) => {
   let currentDay = 0;
 
   return (
@@ -88,6 +97,11 @@ const TimeTable: React.FC<TimeTableProps> = ({ events }) => {
                 hour12: false,
                 timeZone: 'Japan'
               })}
+              {isEditing && (
+                <>
+                  <DeleteButton variant="ghost" onClick={() => { onEventDelete(event.localId!) }}>削除</DeleteButton>
+                </>
+              )}
             </div>
             <div className="content">{event.location}</div>
             <div className="details">{event.details}</div>

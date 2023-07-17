@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { DateTimePicker } from "@/components/date-time-picker"
@@ -55,6 +57,11 @@ const EventForm = styled.form`
     height: 100px; /* Adjust the height to increase the size of the input */
 `;
 
+const ButtonContainer = styled.div`
+  display: flex;
+  gap: 10px;
+`
+
 const Container = styled.div`
   display: flex;
   justify-content: space-between;
@@ -63,9 +70,10 @@ const Container = styled.div`
 
 interface UtilityBarProps {
   onEventSubmit: (noteProps: any) => Promise<void>;
+  toggleIsEditing: () => void;
 }
 
-const UtilityBar: React.FC<UtilityBarProps> = ({ onEventSubmit }) => {
+const UtilityBar: React.FC<UtilityBarProps> = ({ onEventSubmit, toggleIsEditing }) => {
   const [isAddingEvent, setIsAddingEvent] = useState(false);
   const [eventTime, setEventTime] = useState(new Date());
   const [eventLocation, setEventLocation] = useState('');
@@ -100,7 +108,13 @@ const UtilityBar: React.FC<UtilityBarProps> = ({ onEventSubmit }) => {
   return (
     <div>
       <Container>
-        <Button onClick={handleAddEvent}>イベントを追加</Button>
+        <ButtonContainer>
+          <Button onClick={handleAddEvent}>追加</Button>
+          <div className="flex items-center space-x-2">
+            <Switch onCheckedChange={toggleIsEditing} id="toggle-edit"/>
+            <Label htmlFor="toggle-edit">編集</Label>
+          </div>
+        </ButtonContainer>
         <Command className="md:w-[25px] lg:w-[300px] rounded-lg border">
           <CommandInput placeholder="Elasticsearch (WIP)" />
         </Command>

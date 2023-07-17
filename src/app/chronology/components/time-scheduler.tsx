@@ -23,9 +23,14 @@ const Container = styled.div`
 const TimeScheduler: React.FC = () => {
   const [events, setEvents] = useState<Note[]>([]);
   const [loading, setLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
-  const handleEventSubmit = useCallback(async (noteTitle: string) => {
-    const note: Note = createNote(noteTitle);
+  const toggleIsEditing = useCallback(() => {
+    setIsEditing((current) => !current);
+  }, []);
+
+  const handleEventSubmit = useCallback(async (noteProps: any) => {
+    const note: Note = createNote(noteProps);
     await submitNote(note);
     setEvents(await getNotes());
   }, []);
@@ -35,7 +40,7 @@ const TimeScheduler: React.FC = () => {
     setEvents(await getNotes());
   }, []);
 
-  const handleEditEvent = useCallback(async (noteId: string, updatedNoteProps: any) => {
+  const handleEventEdit = useCallback(async (noteId: string, updatedNoteProps: any) => {
     await editNote(noteId, updatedNoteProps);
     setEvents(await getNotes());
   }, []);
@@ -112,8 +117,16 @@ const TimeScheduler: React.FC = () => {
 
   return (
     <Container>
-      <UtilityBar onEventSubmit={handleEventSubmit} />
-      <TimeTable events={events} />
+      <UtilityBar
+        onEventSubmit={handleEventSubmit}
+        toggleIsEditing={toggleIsEditing}
+      />
+      <TimeTable
+        events={events}
+        isEditing={isEditing}
+        onEventEdit={handleEventEdit}
+        onEventDelete={handleEventDelete}
+      />
       <OfflineIndicator />
     </Container>
   );
