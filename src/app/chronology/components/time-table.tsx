@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Note } from '../lib/note-actions';
 
 const Grid = styled.div`
   .timeGrid {
@@ -19,11 +20,6 @@ const Grid = styled.div`
     text-align: center;
     font-weight: bold;
   }
-  
-  .timesHeader {
-    font-size: 1rem;
-    margin: 0;
-  }
 
   .columnHeader {
     border-right: 1px solid #ddd;
@@ -42,50 +38,72 @@ const Grid = styled.div`
   .columnSlot {
     border-right: 1px solid #ddd;
   }
-`
 
-const TimeGrid: React.FC = () => {
-  const getTimeSlots = (): Date[] => {
-    const startTime = new Date();
-    startTime.setHours(0, 0, 0, 0); // Set start time to midnight
+  .eventDetails {
+    display: grid;
+    text-align: left;
+    border-top: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    padding: 0.5rem 1rem;
+  }
 
-    const timeSlots: Date[] = [];
-    for (let i = 0; i < 24; i++) {
-      const timeSlot = new Date(startTime.getTime() + i * 60 * 60 * 1000); // Increment time by 1 hour
-      timeSlots.push(timeSlot);
-    }
+  .eventRow {
+    display: grid;
+    text-align: center;
+    border-top: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    padding: 0.5rem 1rem;
+  }
 
-    return timeSlots;
-  };
+  .eventRow span {
+    display: block;
+    line-height: 1.5;
+    font-size: 1rem;
+  }
+`;
 
-  const timeSlots = getTimeSlots();
+interface TimeTableProps {
+  events: Note[];
+}
 
+const TimeTable: React.FC<TimeTableProps> = ({ events }) => {
   return (
     <Grid>
       <div className="timeGrid">
-        <div className="timeHeader">
-          <span className="timesHeader">時刻</span>
-        </div>
-        <div className="columnHeader">発信元</div>
-        <div className="columnHeader">内容</div>
-
-        {timeSlots.map((timeSlot) => (
-          <React.Fragment key={timeSlot.toISOString()}>
-            <div className="timeSlot">
-              {timeSlot.toLocaleString('en-Gb', {
-                hour: 'numeric',
-                minute: '2-digit',
-                hour12: false,
-                timeZone: "Japan"
-              })}
+        <div>
+          <div className="timeHeader">時刻</div>
+          {events.map((event, index) => (
+            <div key={index} className="eventRow">
+              <span>
+                {new Date(event.time).toLocaleTimeString('en-Gb', {
+                  hour: 'numeric',
+                  minute: '2-digit',
+                  hour12: false,
+                  timeZone: 'Japan'
+                })}
+              </span>
             </div>
-            <div className="columnSlot" />
-            <div className="columnSlot" />
-          </React.Fragment>
-        ))}
+          ))}
+        </div>
+        <div>
+          <div className="columnHeader">発信元</div>
+          {events.map((event, index) => (
+            <div key={index} className="eventRow">
+              <span>{event.location}</span>
+            </div>
+          ))}
+        </div>
+        <div>
+          <div className="columnHeader">内容</div>
+          {events.map((event, index) => (
+            <div key={index} className="eventDetails">
+              <span>{event.details}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </Grid>
   );
 };
 
-export default TimeGrid;
+export default TimeTable;

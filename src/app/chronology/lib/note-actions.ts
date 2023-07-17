@@ -14,22 +14,31 @@ export interface Note {
   localDeleteSynced?: boolean;
   localEditSynced?: boolean;
 
-  title: string;
+  time: Date;
+  location: string;
+  details: string;
+
   createdAt: Date;
 }
 
 function createServerNote(note: Note) {
   const serverNote: Note = {
-    title: note.title,
+    time: note.time,
+    location: note.location,
+    details: note.details,
+
     localId: note.localId,
     createdAt: note.createdAt
   }
   return serverNote
 }
 
-export function createNote(noteTitle: string) {
+export function createNote(noteProps: any) {
   const note: Note = {
-    title: noteTitle,
+    time: noteProps.time,
+    location: noteProps.location,
+    details: noteProps.details,
+
     localId: crypto.randomUUID(),
     createdAt: new Date() // Add the current timestamp
   };
@@ -95,12 +104,14 @@ export async function deleteNote(noteId: string) {
   }
 }
 
-export async function editNote(noteId: string, updatedTitle: string) {
+export async function editNote(noteId: string, updatedNoteProps: any) {
   try {
     const note = await getOfflineNote(noteId);
     if (note !== undefined) {
       if (note._id === undefined) {
-        note.title = updatedTitle;
+        note.time = updatedNoteProps.time;
+        note.location = updatedNoteProps.location;
+        note.details = updatedNoteProps.details;
         await editOfflineNote(note);
       } else {
         note.localEditSynced = false;
@@ -108,15 +119,25 @@ export async function editNote(noteId: string, updatedTitle: string) {
         if (navigator.onLine) {
           // Make a PUT request to the API endpoint
           try {
-            await axios.put(`/chronology/api/edit-note?id=${note._id}`, { title: updatedTitle });
-            note.title = updatedTitle;
+            await axios.put(`/chronology/api/edit-note?id=${note._id}`, { 
+              time: updatedNoteProps.time,
+              location: updatedNoteProps.location,
+              details: updatedNoteProps.details
+            });
+            note.time = updatedNoteProps.time;
+            note.location = updatedNoteProps.location;
+            note.details = updatedNoteProps.details;
+
             note.localEditSynced = undefined;
             await editOfflineNote(note);
           } catch (error) {
             console.error('Error editing note:', error);
           }
         } else {
-          note.title = updatedTitle;
+          note.time = updatedNoteProps.time;
+          note.location = updatedNoteProps.location;
+          note.details = updatedNoteProps.details;
+
           await editOfflineNote(note);
         }
       }
@@ -148,11 +169,17 @@ export async function updateEditedNote(serverNote: Note, localNotes: Note[]) {
   const matchingLocalNote = localNotes.find((localNote: Note) => localNote._id === serverNote._id);
   if (matchingLocalNote !== undefined) {
     if (matchingLocalNote.localEditSynced === false) {
-      await axios.put(`/chronology/api/edit-note?id=${matchingLocalNote._id}`, { title: matchingLocalNote.title });
+      await axios.put(`/chronology/api/edit-note?id=${matchingLocalNote._id}`, {
+        time: matchingLocalNote.time,
+        location: matchingLocalNote.location,
+        details: matchingLocalNote.details
+      });
       matchingLocalNote.localEditSynced = undefined;
       await editOfflineNote(matchingLocalNote);
     } else if (matchingLocalNote.localEditSynced === undefined) {
-      matchingLocalNote.title = serverNote.title;
+      matchingLocalNote.time = serverNote.time;
+      matchingLocalNote.location = serverNote.location;
+      matchingLocalNote.details = serverNote.details;
       await editOfflineNote(matchingLocalNote);
     }
   }
@@ -216,7 +243,7 @@ export async function refreshNotes() {
 export async function getNotes() {
   const notes = await getOfflineNotes();
   notes.sort(function(a: Note, b: Note) {
-    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    return new Date(b.time).getTime() - new Date(a.time).getTime();
   });
   return notes;
 }
