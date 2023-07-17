@@ -3,62 +3,49 @@ import styled from 'styled-components';
 import { Note } from '../lib/note-actions';
 
 const Grid = styled.div`
-  .timeGrid {
+  display: grid;
+  border: 1px solid #ddd;
+
+  .row {
     display: grid;
     grid-template-columns: 1fr 3fr 8fr; /* Adjust column count as needed */
-    border: 1px solid #ddd;
+    
+    .header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid #ddd;
+      padding: 10px;
+      background-color: #f5f5f5;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .content {
+      text-align: center;
+      border-top: 1px solid #ddd;
+      border-right: 1px solid #ddd;
+      padding: 0.5rem 1rem;
+    }
+
+    .details {
+      text-align: left;
+      border-top: 1px solid #ddd;
+      border-right: 1px solid #ddd;
+      padding: 0.5rem 1rem;
+    }
   }
 
-  .timeHeader {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-right: 1px solid #ddd;
-    padding: 10px;
-    background-color: #f5f5f5;
+  .date {
     text-align: center;
     font-weight: bold;
-  }
-
-  .columnHeader {
-    border-right: 1px solid #ddd;
-    padding: 10px;
+    font-size: 1.5rem;
     background-color: #f5f5f5;
-    text-align: center;
-    font-weight: bold;
   }
 
-  .timeSlot {
-    border-right: 1px solid #ddd;
-    padding: 10px;
-    text-align: center;
-  }
-
-  .columnSlot {
-    border-right: 1px solid #ddd;
-  }
-
-  .eventDetails {
-    display: grid;
-    text-align: left;
-    border-top: 1px solid #ddd;
-    border-right: 1px solid #ddd;
-    padding: 0.5rem 1rem;
-  }
-
-  .eventRow {
-    display: grid;
-    text-align: center;
-    border-top: 1px solid #ddd;
-    border-right: 1px solid #ddd;
-    padding: 0.5rem 1rem;
-  }
-
-  .eventRow span {
-    display: block;
-    line-height: 1.5;
-    font-size: 1rem;
+  .bar {
+    border-bottom: 5px solid #ddd;
   }
 `;
 
@@ -67,41 +54,46 @@ interface TimeTableProps {
 }
 
 const TimeTable: React.FC<TimeTableProps> = ({ events }) => {
+  let currentMonth = 0;
+  let currentDay = 0;
+
   return (
     <Grid>
-      <div className="timeGrid">
-        <div>
-          <div className="timeHeader">時刻</div>
-          {events.map((event, index) => (
-            <div key={index} className="eventRow">
-              <span>
-                {new Date(event.time).toLocaleTimeString('en-Gb', {
-                  hour: 'numeric',
-                  minute: '2-digit',
-                  hour12: false,
-                  timeZone: 'Japan'
-                })}
-              </span>
-            </div>
-          ))}
-        </div>
-        <div>
-          <div className="columnHeader">発信元</div>
-          {events.map((event, index) => (
-            <div key={index} className="eventRow">
-              <span>{event.location}</span>
-            </div>
-          ))}
-        </div>
-        <div>
-          <div className="columnHeader">内容</div>
-          {events.map((event, index) => (
-            <div key={index} className="eventDetails">
-              <span>{event.details}</span>
-            </div>
-          ))}
-        </div>
+      <div className="row">
+        <div className="header">時刻</div>
+        <div className="header">発信元</div>
+        <div className="header">内容</div>
       </div>
+      {events.map((event, index) => {
+        const dateTime = new Date(event.time)
+        const eventDay = dateTime.getDate();
+        const eventMonth = dateTime.getMonth() + 1;
+        const isSameDay = currentDay === eventDay;
+        if (!isSameDay) {
+          currentDay = eventDay;
+        }
+        
+        return <div key={index}>
+          {!isSameDay && (
+            <>
+              <div className="bar"></div>
+              <div className="date">{eventMonth + "/" + eventDay}</div>
+            </>
+          )}
+          <div className="row">
+            <div className="content">
+              {dateTime.toLocaleTimeString('en-Gb', {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: false,
+                timeZone: 'Japan'
+              })}
+            </div>
+            <div className="content">{event.location}</div>
+            <div className="details">{event.details}</div>
+          </div>
+        </div>
+    })}
     </Grid>
   );
 };

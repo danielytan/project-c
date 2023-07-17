@@ -243,7 +243,7 @@ export async function refreshNotes() {
 export async function getNotes() {
   const notes = await getOfflineNotes();
   notes.sort(function(a: Note, b: Note) {
-    return new Date(b.time).getTime() - new Date(a.time).getTime();
+    return new Date(a.time).getTime() - new Date(b.time).getTime();
   });
   return notes;
 }
