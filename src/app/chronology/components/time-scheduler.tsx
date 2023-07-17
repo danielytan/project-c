@@ -1,67 +1,51 @@
 "use client"
 
-import { useCallback, useEffect, useState } from 'react';
-import { SpinnerContainer } from './loading-spinner';
-import { pusherClient } from '../lib/note-pusher'
-import { Note,
-  createNote, submitNote, deleteNote, editNote, refreshNotes, getNotes,
-  updateSavedNote, updateEditedNote, updateDeletedNote
-} from '../lib/note-actions'
-
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
-
-import NoteForm from './note-form';
-import NoteItem from './note-item';
+import UtilityBar from './utility-bar';
+import TimeTable from './time-table';
 import OfflineIndicator from './offline-indicator';
-import TimeGrid from './time-grid';
+import { 
+  Note, createNote, deleteNote, editNote, getNotes, refreshNotes,
+  submitNote, updateDeletedNote, updateEditedNote, updateSavedNote
+} from '../lib/note-actions';
+import { pusherClient } from '../lib/note-pusher';
 
 const Container = styled.div`
   max-width: 100%;
   margin: 0 1;
   padding: 20px;
-`;
-
-const NotesContainer = styled(Container)`
   display: flex;
   flex-direction: column;
   align-items: left;
-`;
+`
 
-const NoteListWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: left;
-  width: 90%; /* Adjust the width to a percentage value */
-  margin: 0 0; /* Add margin: auto to center the wrapper */
-`;
-
-const NoteListLoadingSpinner = styled(SpinnerContainer)`
-  margin-top: 0px;
-  margin-bottom: 20px;
-  align-self: center;
-`;
-
-export default function NoteList() {
-  const [allNotes, setAllNotes] = useState<Note[]>([]);
+const TimeScheduler: React.FC = () => {
+  const [events, setEvents] = useState<Note[]>([]);
   const [loading, setLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
-  const handleNoteSubmit = useCallback(async (noteTitle: string) => {
-    const note: Note = createNote(noteTitle);
+  const toggleIsEditing = useCallback(() => {
+    setIsEditing((current) => !current);
+  }, []);
+
+  const handleEventSubmit = useCallback(async (noteProps: any) => {
+    const note: Note = createNote(noteProps);
     await submitNote(note);
-    setAllNotes(await getNotes());
+    setEvents(await getNotes());
   }, []);
 
-  const handleNoteDelete = useCallback(async (noteId: string) => {
+  const handleEventDelete = useCallback(async (noteId: string) => {
     await deleteNote(noteId);
-    setAllNotes(await getNotes());
+    setEvents(await getNotes());
   }, []);
 
-  const handleEditNote = useCallback(async (noteId: string, updatedTitle: string) => {
-    await editNote(noteId, updatedTitle);
-    setAllNotes(await getNotes());
+  const handleEventEdit = useCallback(async (noteId: string, updatedNoteProps: any) => {
+    await editNote(noteId, updatedNoteProps);
+    setEvents(await getNotes());
   }, []);
 
-  const fetchNotes = useCallback(async () => {
+  const fetchEvents = useCallback(async () => {
     setLoading(true);
 
     // Simulate a longer loading time (e.g., 2 seconds)
@@ -69,7 +53,7 @@ export default function NoteList() {
 
     try {
       await refreshNotes();
-      setAllNotes(await getNotes());
+      setEvents(await getNotes());
     } catch (error) {
       console.error('Error fetching notes:', error);
     } finally {
@@ -78,7 +62,7 @@ export default function NoteList() {
   }, []);
 
   useEffect(() => {
-    fetchNotes();
+    fetchEvents();
 
     /*
     if ('serviceWorker' in navigator) {
@@ -104,7 +88,7 @@ export default function NoteList() {
     */
 
     window.addEventListener('online', async () => {
-      await fetchNotes();
+      await fetchEvents();
     })
 
     const channel = pusherClient?.subscribe('chronology');
@@ -112,29 +96,40 @@ export default function NoteList() {
     if (channel) {
       channel.bind('note-saved', async (savedNote: Note) => {
         updateSavedNote(savedNote, await getNotes());
-        setAllNotes(await getNotes());
+        setEvents(await getNotes());
       });
 
       channel.bind('note-updated', async (updatedNote: Note) => {
         updateEditedNote(updatedNote, await getNotes());
-        setAllNotes(await getNotes());
+        setEvents(await getNotes());
       });
       
       channel.bind('note-deleted', async (deletedNoteId: number) => {
         updateDeletedNote(deletedNoteId, await getNotes());
-        setAllNotes(await getNotes());
+        setEvents(await getNotes());
       });
     }
 
     return () => {
       pusherClient?.unsubscribe('chronology');
     };
-  }, [handleNoteSubmit, fetchNotes]);
+  }, [handleEventSubmit, fetchEvents]);
 
   return (
-    <NotesContainer>
-      <TimeGrid />
+    <Container>
+      <UtilityBar
+        onEventSubmit={handleEventSubmit}
+        toggleIsEditing={toggleIsEditing}
+      />
+      <TimeTable
+        events={events}
+        isEditing={isEditing}
+        onEventEdit={handleEventEdit}
+        onEventDelete={handleEventDelete}
+      />
       <OfflineIndicator />
-    </NotesContainer>
+    </Container>
   );
-}
+};
+
+export default TimeScheduler;

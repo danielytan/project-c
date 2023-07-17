@@ -1,9 +1,9 @@
-import NoteList from './components/note-list';
+import TimeScheduler from './components/time-scheduler';
 
-export default function ChronologyPage() {
+export default function Home() {
   return (
     <div>
-      <NoteList />
+      <TimeScheduler />
     </div>
   );
 }

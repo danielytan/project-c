@@ -6,7 +6,7 @@ import { ObjectId } from 'mongodb';
 export async function PUT(request: NextRequest) {
   try {
     const id = request.nextUrl.searchParams.get("id")!;
-    const noteTitle = (await request.json()).title
+    const note = await request.json()
 
     // Connect to the MongoDB database
     const db = await connectToDatabase();
@@ -17,14 +17,21 @@ export async function PUT(request: NextRequest) {
 
     const result = await collection.updateOne({ "_id": noteId }, {
       $set: {
-        title: noteTitle
+        time: note.time,
+        location: note.location,
+        details: note.details,
       }
     });
 
     if (result.acknowledged === true) {
       // Trigger the 'note-edited' event on the 'notes' channel
       const pusherServer = getPusherServer();
-      await pusherServer.trigger('chronology', 'note-updated', { _id: id, title: noteTitle } );
+      await pusherServer.trigger('chronology', 'note-updated', {
+        _id: id,
+        time: note.time,
+        location: note.location,
+        details: note.details
+      } );
 
       return NextResponse.json({ message: 'Note edited successfully' }, { status: 200 });
     } else {
