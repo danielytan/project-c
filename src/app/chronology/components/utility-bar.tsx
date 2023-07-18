@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
@@ -70,10 +70,15 @@ const Container = styled.div`
 
 interface UtilityBarProps {
   onEventSubmit: (noteProps: any) => Promise<void>;
+  onEventEdit: (noteId: string, updatedNoteProps: any) => Promise<void>;
   toggleIsEditing: () => void;
+  eventBeingEdited: any;
+  setEventBeingEdited: any;
 }
 
-const UtilityBar: React.FC<UtilityBarProps> = ({ onEventSubmit, toggleIsEditing }) => {
+const UtilityBar: React.FC<UtilityBarProps> = ({
+  onEventSubmit, onEventEdit, toggleIsEditing, eventBeingEdited, setEventBeingEdited
+}) => {
   const [isAddingEvent, setIsAddingEvent] = useState(false);
   const [eventTime, setEventTime] = useState(new Date());
   const [eventLocation, setEventLocation] = useState('');
@@ -88,6 +93,7 @@ const UtilityBar: React.FC<UtilityBarProps> = ({ onEventSubmit, toggleIsEditing 
 
   const handleCancelEvent = () => {
     setIsAddingEvent(false);
+    setEventBeingEdited(undefined);
   };
 
   const handleEventSubmit = async (e: React.FormEvent) => {
@@ -100,10 +106,23 @@ const UtilityBar: React.FC<UtilityBarProps> = ({ onEventSubmit, toggleIsEditing 
     };
 
     // Logic to save the new event or update the existing events list
+    if (eventBeingEdited === undefined) {
+      await onEventSubmit(newEvent);
+    } else {
+      await onEventEdit(eventBeingEdited.localId, newEvent);
+    }
 
-    await onEventSubmit(newEvent);
-    setIsAddingEvent(false);
+    handleCancelEvent();
   };
+
+  useEffect(() => {
+    if (!isAddingEvent && eventBeingEdited !== undefined) {
+      setEventTime(new Date(eventBeingEdited.time));
+      setEventLocation(eventBeingEdited.location);
+      setEventDetails(eventBeingEdited.details);
+      setIsAddingEvent(true);
+    }
+  })
 
   return (
     <div>
@@ -112,19 +131,22 @@ const UtilityBar: React.FC<UtilityBarProps> = ({ onEventSubmit, toggleIsEditing 
           <Button onClick={handleAddEvent}>追加</Button>
           <div className="flex items-center space-x-2">
             <Switch onCheckedChange={toggleIsEditing} id="toggle-edit"/>
-            <Label htmlFor="toggle-edit">編集</Label>
+            <Label htmlFor="toggle-edit">エディット</Label>
           </div>
         </ButtonContainer>
         <Command className="md:w-[25px] lg:w-[300px] rounded-lg border">
           <CommandInput placeholder="Elasticsearch (WIP)" />
         </Command>
       </Container>
-      {isAddingEvent && (
+      {(isAddingEvent) && (
         <>
           <EventForm onSubmit={handleEventSubmit}>
-            <DateTimePicker date={new Date()} setDate={function (date: Date): void {
-              setEventTime(date);
-            }} />
+            <DateTimePicker
+              date={new Date()}
+              setDate={function (date: Date): void {
+                setEventTime(date);
+              }} 
+            />
             <Input
               type="text"
               placeholder="発信元"

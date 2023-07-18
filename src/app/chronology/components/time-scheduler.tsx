@@ -24,6 +24,7 @@ const TimeScheduler: React.FC = () => {
   const [events, setEvents] = useState<Note[]>([]);
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [eventBeingEdited, setEventBeingEdited] = useState(undefined);
 
   const toggleIsEditing = useCallback(() => {
     setIsEditing((current) => !current);
@@ -119,13 +120,16 @@ const TimeScheduler: React.FC = () => {
     <Container>
       <UtilityBar
         onEventSubmit={handleEventSubmit}
+        onEventEdit={handleEventEdit}
         toggleIsEditing={toggleIsEditing}
+        eventBeingEdited={eventBeingEdited}
+        setEventBeingEdited={setEventBeingEdited}
       />
       <TimeTable
         events={events}
         isEditing={isEditing}
-        onEventEdit={handleEventEdit}
         onEventDelete={handleEventDelete}
+        setEventBeingEdited={setEventBeingEdited}
       />
       <OfflineIndicator />
     </Container>

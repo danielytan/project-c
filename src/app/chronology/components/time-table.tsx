@@ -50,19 +50,19 @@ const Grid = styled.div`
   }
 `;
 
-const DeleteButton = styled(Button)`
+const UtilityButton = styled(Button)`
   font-size: 1rem;
 `
 
 interface TimeTableProps {
   events: Note[];
   isEditing: boolean;
-  onEventEdit: (noteId: string, updatedNoteProps: any) => Promise<void>;
+  setEventBeingEdited: any;
   onEventDelete: (noteId: string) => Promise<void>;
 }
 
 const TimeTable: React.FC<TimeTableProps> = ({
-  isEditing, events, onEventEdit, onEventDelete
+  isEditing, events, onEventDelete, setEventBeingEdited
 }) => {
   let currentDay = 0;
 
@@ -99,7 +99,8 @@ const TimeTable: React.FC<TimeTableProps> = ({
               })}
               {isEditing && (
                 <>
-                  <DeleteButton variant="ghost" onClick={() => { onEventDelete(event.localId!) }}>削除</DeleteButton>
+                  <UtilityButton variant="ghost" onClick={() => { onEventDelete(event.localId!) }}>削除</UtilityButton>
+                  <UtilityButton variant="ghost" onClick={() => { setEventBeingEdited(event) }}>編集</UtilityButton>
                 </>
               )}
             </div>
