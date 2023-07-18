@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import UtilityBar from './utility-bar';
 import TimeTable from './time-table';
 import OfflineIndicator from './offline-indicator';
+import { SpinnerContainer } from '../components/loading-spinner';
 import { 
   Note, createNote, deleteNote, editNote, getNotes, refreshNotes,
   submitNote, updateDeletedNote, updateEditedNote, updateSavedNote
@@ -18,6 +19,11 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: left;
+`
+
+const LoadingSpinner = styled(SpinnerContainer)`
+  margin-top: 20px;
+  margin-bottom: 10px;
 `
 
 const TimeScheduler: React.FC = () => {
@@ -131,6 +137,7 @@ const TimeScheduler: React.FC = () => {
         onEventDelete={handleEventDelete}
         setEventBeingEdited={setEventBeingEdited}
       />
+      {loading && <LoadingSpinner />}
       <OfflineIndicator />
     </Container>
   );

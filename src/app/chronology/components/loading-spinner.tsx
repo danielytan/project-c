@@ -7,7 +7,8 @@ const spinAnimation = keyframes`
 `;
 
 export const SpinnerContainer = styled.div`
-  display: inline-block;
+  display: flex;
+  align-self: center;
   width: 40px;
   height: 40px;
   border: 2px solid #ccc;

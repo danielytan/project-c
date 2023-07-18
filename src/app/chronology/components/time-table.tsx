@@ -54,6 +54,10 @@ const UtilityButton = styled(Button)`
   font-size: 1rem;
 `
 
+const EditButtonContainer = styled.div`
+  display: grid;
+`
+
 interface TimeTableProps {
   events: Note[];
   isEditing: boolean;
@@ -98,10 +102,10 @@ const TimeTable: React.FC<TimeTableProps> = ({
                 timeZone: 'Japan'
               })}
               {isEditing && (
-                <>
+                <EditButtonContainer>
                   <UtilityButton variant="ghost" onClick={() => { onEventDelete(event.localId!) }}>削除</UtilityButton>
                   <UtilityButton variant="ghost" onClick={() => { setEventBeingEdited(event) }}>編集</UtilityButton>
-                </>
+                </EditButtonContainer>
               )}
             </div>
             <div className="content">{event.location}</div>
