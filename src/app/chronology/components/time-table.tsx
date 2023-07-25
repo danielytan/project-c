@@ -3,12 +3,12 @@ import styled from 'styled-components';
 import { Button } from '@/components/ui/button';
 import { Note } from '../lib/note-actions';
 
-const Grid = styled.div<{ isEditing?: boolean }>`
+const Grid = styled.div<{ $isEditing?: boolean }>`
   display: grid;
 
   .row {
     display: grid;
-    grid-template-columns: ${props => props.isEditing ? '0.8fr 1fr 2.2fr' : '1fr 3fr'} 8fr;
+    grid-template-columns: ${props => props.$isEditing ? '0.8fr 1fr 2.2fr' : '1fr 3fr'} 8fr;
 
     .header {
       display: flex;
@@ -66,6 +66,30 @@ const EditButtonContainer = styled.div`
   grid-template-columns: 1fr 1fr;
 `
 
+const OfflineIndicatorWrapper = styled.div`
+  display: flex;
+  flex-direction: column; /* Update to column */
+  align-items: flex-end; /* Align text elements to the right */
+  justify-content: flex-end; /* Align text elements to the bottom */
+  position: relative;
+  bottom: 0;
+  right: 0;
+  font-size: 0.75rem; /* Adjust the font size to make the icon smaller */
+  color: #fff;
+`;
+
+const OfflineIndicator = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 0.25rem; /* Add margin-bottom for spacing between pairs */
+`;
+
+const OfflineIndicatorText = styled.span`
+  font-size: 0.8rem;
+  color: red;
+`;
+
 interface TimeTableProps {
   events: Note[];
   isEditing: boolean;
@@ -79,7 +103,7 @@ const TimeTable: React.FC<TimeTableProps> = ({
   let currentDay = 0;
 
   return (
-    <Grid isEditing={isEditing}>
+    <Grid $isEditing={isEditing}>
       <div className="row">
         {isEditing && (<div></div>)}
         <div className="header">時刻</div>
@@ -119,10 +143,31 @@ const TimeTable: React.FC<TimeTableProps> = ({
               })}
             </div>
             <div className="content">{event.location}</div>
-            <div className="details">{event.details}</div>
+            <div className="details">
+              {event.details}
+              {(event.localDeleteSynced === false || event.localEditSynced === false || event._id === undefined) && (
+                <OfflineIndicatorWrapper>
+                  {event.localDeleteSynced === false && (
+                    <OfflineIndicator>
+                      <OfflineIndicatorText>Note deletion not synced</OfflineIndicatorText>
+                    </OfflineIndicator>
+                  )}
+                  {event.localEditSynced === false && (
+                    <OfflineIndicator>
+                      <OfflineIndicatorText>Note edit not synced</OfflineIndicatorText>
+                    </OfflineIndicator>
+                  )}
+                  {event._id === undefined && (
+                    <OfflineIndicator>
+                      <OfflineIndicatorText>Note submission not synced</OfflineIndicatorText>
+                    </OfflineIndicator>
+                  )}
+                </OfflineIndicatorWrapper>
+              )}
+            </div>
           </div>
         </div>
-    })}
+      })}
     </Grid>
   );
 };
