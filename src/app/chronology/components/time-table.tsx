@@ -42,7 +42,7 @@ const Grid = styled.div<{ $isEditing?: boolean }>`
     border-bottom: 5px solid #ddd;
     float: right;
     margin-left: auto;
-    width: ${props => props.isEditing ? 'calc(11.2/12 * 100%)' : '100%'};
+    width: ${props => props.$isEditing ? 'calc(11.2/12 * 100%)' : '100%'};
   }
 
   .date {
@@ -53,7 +53,7 @@ const Grid = styled.div<{ $isEditing?: boolean }>`
     margin-left: auto;
     box-sizing: content-box;
     outline: 1px solid #ddd;
-    width: ${props => props.isEditing ? 'calc(11.2/12 * 100%)' : '100%'};
+    width: ${props => props.$isEditing ? 'calc(11.2/12 * 100%)' : '100%'};
   }
 `;
 

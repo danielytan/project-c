@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import connectToDatabase from '../../lib/note-mongodb';
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache'

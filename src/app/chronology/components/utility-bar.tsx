@@ -122,7 +122,7 @@ const UtilityBar: React.FC<UtilityBarProps> = ({
       setEventDetails(eventBeingEdited.details);
       setIsAddingEvent(true);
     }
-  })
+  }, [isAddingEvent, eventBeingEdited])
 
   return (
     <div>
