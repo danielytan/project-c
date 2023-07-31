@@ -149,17 +149,17 @@ const TimeTable: React.FC<TimeTableProps> = ({
                 <OfflineIndicatorWrapper>
                   {event.localDeleteSynced === false && (
                     <OfflineIndicator>
-                      <OfflineIndicatorText>Note deletion not synced</OfflineIndicatorText>
+                      <OfflineIndicatorText>削除が同期されていない</OfflineIndicatorText>
                     </OfflineIndicator>
                   )}
                   {event.localEditSynced === false && (
                     <OfflineIndicator>
-                      <OfflineIndicatorText>Note edit not synced</OfflineIndicatorText>
+                      <OfflineIndicatorText>編集が同期されていない</OfflineIndicatorText>
                     </OfflineIndicator>
                   )}
                   {event._id === undefined && (
                     <OfflineIndicator>
-                      <OfflineIndicatorText>Note submission not synced</OfflineIndicatorText>
+                      <OfflineIndicatorText>投稿が同期されていない</OfflineIndicatorText>
                     </OfflineIndicator>
                   )}
                 </OfflineIndicatorWrapper>
