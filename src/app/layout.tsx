@@ -1,7 +1,7 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
 import { ThemeProvider } from "@/components/theme-provider"
-import { MainNav } from "@/components/main-nav"
+import { SiteHeader } from "@/components/site-header"
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,18 +16,22 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-    <body className={inter.className}>
-    <div className="hidden flex-col md:flex">
-      <div className="border-b">
-        <div className="flex h-16 items-center px-4">
-          <MainNav />
-        </div>
-      </div>
-    </div>
-    <div className="flex-1">{children}</div>
-    </body>
-  </html>
+    <html lang="en" suppressHydrationWarning>
+      <head />
+      <body>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div className="relative flex min-h-screen flex-col">
+            <SiteHeader />
+            <div className="flex-1">{children}</div>
+          </div>
+        </ThemeProvider>
+      </body>
+    </html>
     /*
     <html lang="en">
       <body className={inter.className}>
